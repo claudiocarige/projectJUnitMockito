@@ -46,6 +46,12 @@ public class UserServiceImpl implements UserService {
                 "não foi encontrado ou e-mail está divergente!");
     }
 
+    @Override
+    public void delete(Integer id) {
+        findById(id);
+        userRepository.deleteById(id);
+    }
+
     private void findByEmail(UserRepresentation userRepresentation) {
         Optional<User> user = userRepository.findByEmail(userRepresentation.getEmail());
         if (user.isPresent() && !user.get().getId().equals(userRepresentation.getId())) {

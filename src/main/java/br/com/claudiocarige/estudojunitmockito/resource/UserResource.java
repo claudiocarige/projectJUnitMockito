@@ -4,6 +4,7 @@ import br.com.claudiocarige.estudojunitmockito.domain.representation.UserReprese
 import br.com.claudiocarige.estudojunitmockito.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -45,5 +46,11 @@ public class UserResource {
                                                      @RequestBody UserRepresentation userRepresentation){
         userRepresentation.setId(id);
         return ResponseEntity.ok().body(mapper.map(userService.update(userRepresentation), UserRepresentation.class));
+    }
+
+    @DeleteMapping(value = ID)
+    public ResponseEntity<HttpStatus> delete(@PathVariable Integer id){
+        userService.delete(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
