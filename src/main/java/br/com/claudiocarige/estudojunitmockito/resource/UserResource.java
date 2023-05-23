@@ -5,11 +5,10 @@ import br.com.claudiocarige.estudojunitmockito.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,5 +32,11 @@ public class UserResource {
                 .stream()
                 .map(x -> mapper.map(x, UserRepresentation.class))
                 .collect(Collectors.toList()));
+    }
+    @PostMapping
+    public ResponseEntity<UserRepresentation> insert(@RequestBody UserRepresentation userRepresentation){
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("{id}")
+                .buildAndExpand(userService.insert(userRepresentation).getId()).toUri();
+        return ResponseEntity.created(uri).build();
     }
 }
