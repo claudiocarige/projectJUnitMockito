@@ -5,7 +5,6 @@ import br.com.claudiocarige.estudojunitmockito.domain.representation.UserReprese
 import br.com.claudiocarige.estudojunitmockito.repository.UserRepository;
 import br.com.claudiocarige.estudojunitmockito.service.UserService;
 import br.com.claudiocarige.estudojunitmockito.service.exception.DataIntegratyViolationException;
-import br.com.claudiocarige.estudojunitmockito.service.exception.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -33,17 +32,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public User insert(UserRepresentation userRepresentation) {
         userRepresentation.setId(null);
+        findByEmail(userRepresentation);
         return userRepository.save(mapper.map(userRepresentation, User.class));
     }
 
     @Override
     public User update(UserRepresentation userRepresentation) {
-        Optional<User> user = userRepository.findById(userRepresentation.getId());
-        if (user.isPresent() && user.get().getEmail().equals(userRepresentation.getEmail())) {
-            return userRepository.save(mapper.map(userRepresentation, User.class));
-        }
-        throw new NoSuchElementException("Objeto não pôde ser atualizado, pois ou " +
-                "não foi encontrado ou e-mail está divergente!");
+        findByEmail(userRepresentation);
+        return userRepository.save(mapper.map(userRepresentation, User.class));
     }
 
     @Override
