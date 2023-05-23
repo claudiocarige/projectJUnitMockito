@@ -39,4 +39,11 @@ public class UserResource {
                 .buildAndExpand(userService.insert(userRepresentation).getId()).toUri();
         return ResponseEntity.created(uri).build();
     }
+
+    @PutMapping(value = ID)
+    public ResponseEntity<UserRepresentation> update(@PathVariable Integer id,
+                                                     @RequestBody UserRepresentation userRepresentation){
+        userRepresentation.setId(id);
+        return ResponseEntity.ok().body(mapper.map(userService.update(userRepresentation), UserRepresentation.class));
+    }
 }

@@ -10,4 +10,5 @@ public interface UserService {
     User findById(Integer id);
     List<User> findAll();
     User insert(UserRepresentation userRepresentation);
+    User update(UserRepresentation userRepresentation);
 }
