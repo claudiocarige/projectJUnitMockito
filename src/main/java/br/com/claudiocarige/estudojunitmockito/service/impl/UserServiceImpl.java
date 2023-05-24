@@ -1,10 +1,12 @@
 package br.com.claudiocarige.estudojunitmockito.service.impl;
 
+
 import br.com.claudiocarige.estudojunitmockito.domain.User;
 import br.com.claudiocarige.estudojunitmockito.domain.representation.UserRepresentation;
 import br.com.claudiocarige.estudojunitmockito.repository.UserRepository;
 import br.com.claudiocarige.estudojunitmockito.service.UserService;
 import br.com.claudiocarige.estudojunitmockito.service.exception.DataIntegratyViolationException;
+import br.com.claudiocarige.estudojunitmockito.service.exception.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -19,10 +21,11 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ModelMapper mapper;
 
+
     @Override
     public User findById(Integer id) {
         Optional<User> user = userRepository.findById(id);
-        return user.orElseThrow();
+        return user.orElseThrow(() -> new NoSuchElementException("Não encontrado"));
     }
 
     @Override
