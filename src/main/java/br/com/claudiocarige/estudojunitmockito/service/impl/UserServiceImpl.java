@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findById(Integer id) {
         Optional<User> user = userRepository.findById(id);
-        return user.orElseThrow(() -> new NoSuchElementException("Não encontrado"));
+        return user.orElseThrow(() -> new NoSuchElementException("No such element!"));
     }
 
     @Override

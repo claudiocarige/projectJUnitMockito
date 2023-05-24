@@ -3,6 +3,7 @@ package br.com.claudiocarige.estudojunitmockito.service.impl;
 import br.com.claudiocarige.estudojunitmockito.domain.User;
 import br.com.claudiocarige.estudojunitmockito.domain.representation.UserRepresentation;
 import br.com.claudiocarige.estudojunitmockito.repository.UserRepository;
+import br.com.claudiocarige.estudojunitmockito.service.exception.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -10,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
@@ -34,6 +36,8 @@ class UserServiceImplTest {
     private User user;
     private UserRepresentation userRepresentation;
     private Optional<User> optionalUser;
+
+    private List<User> list;
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -52,9 +56,16 @@ class UserServiceImplTest {
         assertEquals(PASSWORD, user.getPassword());
         assertEquals(EMAIL, user.getEmail());
     }
-
     @Test
-    void findAll() {
+    void WhenFindByIdThenReturnAnNoSuchElementException(){
+        when(userRepository.findById(anyInt())).thenThrow(new NoSuchElementException("No such element!"));
+
+        try {
+            userService.findById(ID);
+        }catch (Exception ex){
+            assertEquals(NoSuchElementException.class, ex.getClass());
+            assertEquals("No such element!", ex.getMessage());
+        }
     }
 
     @Test
