@@ -16,6 +16,7 @@ import java.util.Optional;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
@@ -50,13 +51,13 @@ class UserServiceImplTest {
     void WhenFindByIdThenReturnAnUserInstance() {
         when(userRepository.findById(anyInt())).thenReturn(optionalUser);
 
-        User user = userService.findById(ID);
-        assertNotNull(user);
-        assertEquals(User.class, user.getClass());
-        assertEquals(ID, user.getId());
-        assertEquals(NAME, user.getName());
-        assertEquals(PASSWORD, user.getPassword());
-        assertEquals(EMAIL, user.getEmail());
+        User response = userService.findById(ID);
+        assertNotNull(response);
+        assertEquals(User.class, response.getClass());
+        assertEquals(ID, response.getId());
+        assertEquals(NAME, response.getName());
+        assertEquals(PASSWORD, response.getPassword());
+        assertEquals(EMAIL, response.getEmail());
     }
     @Test
     void WhenFindByIdThenReturnAnNoSuchElementException(){
@@ -86,7 +87,17 @@ class UserServiceImplTest {
     }
 
     @Test
-    void insert() {
+    void WhenUnsertThenReturnSuccess() {
+        when(userRepository.save(any())).thenReturn(user);
+
+        User response = userService.insert(userRepresentation);
+
+        assertNotNull(response);
+        assertEquals(User.class, response.getClass());
+        assertEquals(ID,response.getId());
+        assertEquals(NAME,response.getName());
+        assertEquals(EMAIL,response.getEmail());
+        assertEquals(PASSWORD,response.getPassword());
     }
 
     @Test
