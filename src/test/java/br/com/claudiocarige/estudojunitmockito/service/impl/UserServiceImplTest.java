@@ -26,6 +26,8 @@ class UserServiceImplTest {
     public static final String NAME      = "claudio";
     public static final String EMAIL     = "ccarige@gmail.com";
     public static final String PASSWORD  = "123";
+    public static final String NO_SUCH_ELEMENT = "No such element!";
+    public static final int INDEX = 0;
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -58,14 +60,29 @@ class UserServiceImplTest {
     }
     @Test
     void WhenFindByIdThenReturnAnNoSuchElementException(){
-        when(userRepository.findById(anyInt())).thenThrow(new NoSuchElementException("No such element!"));
+        when(userRepository.findById(anyInt())).thenThrow(new NoSuchElementException(NO_SUCH_ELEMENT));
 
         try {
             userService.findById(ID);
         }catch (Exception ex){
             assertEquals(NoSuchElementException.class, ex.getClass());
-            assertEquals("No such element!", ex.getMessage());
+            assertEquals(NO_SUCH_ELEMENT, ex.getMessage());
         }
+    }
+
+    @Test
+    void WhenFindAllThenReturnAnListUsers(){
+        when(userRepository.findAll()).thenReturn(List.of(user,new User(2,"Maria","maria@gmail.com", "123")));
+
+        List<User> response = userService.findAll();
+        assertNotNull(response);
+        assertEquals(2, response.size());
+        assertEquals(User.class, response.get(INDEX).getClass());
+
+        assertEquals(ID, response.get(INDEX).getId());
+        assertEquals(NAME, response.get(INDEX).getName());
+        assertEquals(EMAIL, response.get(INDEX).getEmail());
+        assertEquals(PASSWORD, response.get(INDEX).getPassword());
     }
 
     @Test
