@@ -3,6 +3,7 @@ package br.com.claudiocarige.estudojunitmockito.service.impl;
 import br.com.claudiocarige.estudojunitmockito.domain.User;
 import br.com.claudiocarige.estudojunitmockito.domain.representation.UserRepresentation;
 import br.com.claudiocarige.estudojunitmockito.repository.UserRepository;
+import br.com.claudiocarige.estudojunitmockito.service.exception.DataIntegratyViolationException;
 import br.com.claudiocarige.estudojunitmockito.service.exception.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,9 +17,8 @@ import java.util.Optional;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 
 class UserServiceImplTest {
@@ -29,6 +29,8 @@ class UserServiceImplTest {
     public static final String PASSWORD  = "123";
     public static final String NO_SUCH_ELEMENT = "No such element!";
     public static final int INDEX = 0;
+    public static final String E_MAIL_JA_CADASTRADO_NA_BASE_DE_DADOS = "E-mail já cadastrado na base de dados!";
+    public static final String NO_SUCH_ELEMENT1 = "No such element!";
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -87,7 +89,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void WhenUnsertThenReturnSuccess() {
+    void WhenInsertThenReturnSuccess() {
         when(userRepository.save(any())).thenReturn(user);
 
         User response = userService.insert(userRepresentation);
@@ -101,11 +103,66 @@ class UserServiceImplTest {
     }
 
     @Test
-    void update() {
+    void WhenInsertThenReturnAnDataIntegrityViolationException() {
+        when(userRepository.findByEmail(anyString())).thenReturn(optionalUser);
+
+        try {
+            optionalUser.get().setId(2);
+            userService.insert(userRepresentation);
+        }catch (Exception ex){
+            assertEquals(DataIntegratyViolationException.class, ex.getClass());
+            assertEquals(E_MAIL_JA_CADASTRADO_NA_BASE_DE_DADOS, ex.getMessage());
+        }
     }
 
     @Test
-    void delete() {
+    void WhenUpdateThenReturnSuccess() {
+        when(userRepository.save(any())).thenReturn(user);
+
+        User response = userService.update(userRepresentation);
+
+        assertNotNull(response);
+        assertEquals(User.class, response.getClass());
+
+        assertNotNull(response);
+        assertEquals(User.class, response.getClass());
+        assertEquals(ID,response.getId());
+        assertEquals(NAME,response.getName());
+        assertEquals(EMAIL,response.getEmail());
+        assertEquals(PASSWORD,response.getPassword());
+    }
+
+    @Test
+    void WhenUpdateThenReturnAnDataIntegrityViolationException() {
+        when(userRepository.findByEmail(anyString())).thenReturn(optionalUser);
+
+        try {
+            optionalUser.get().setId(2);
+            userService.update(userRepresentation);
+        }catch (Exception ex){
+            assertEquals(DataIntegratyViolationException.class, ex.getClass());
+            assertEquals(E_MAIL_JA_CADASTRADO_NA_BASE_DE_DADOS, ex.getMessage());
+        }
+    }
+    @Test
+    void deleteWithSuccess() {
+        when(userRepository.findById(anyInt())).thenReturn(optionalUser);
+
+        doNothing().when(userRepository).deleteById(anyInt());
+        userService.delete(ID);
+        verify(userRepository, times(1)).deleteById(anyInt());
+    }
+
+    @Test
+    void deleteWithNoSuchElementException(){
+        when(userRepository.findById(anyInt())).thenThrow(new NoSuchElementException(NO_SUCH_ELEMENT1));
+
+        try {
+            userService.delete(ID);
+        }catch (Exception ex){
+            assertEquals(NoSuchElementException.class, ex.getClass());
+            assertEquals(NO_SUCH_ELEMENT1, ex.getMessage());
+        }
     }
 
     public void startModels(){

@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
     private void findByEmail(UserRepresentation userRepresentation) {
         Optional<User> user = userRepository.findByEmail(userRepresentation.getEmail());
         if (user.isPresent() && !user.get().getId().equals(userRepresentation.getId())) {
-            throw new DataIntegratyViolationException("E-mail já cadastrado ma base de dados!");
+            throw new DataIntegratyViolationException("E-mail já cadastrado na base de dados!");
         }
     }
 
