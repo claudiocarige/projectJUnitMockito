@@ -31,8 +31,8 @@ class UserServiceImplTest {
     public static final String PASSWORD  = "123";
     public static final String NO_SUCH_ELEMENT = "No such element!";
     public static final int INDEX = 0;
-    public static final String E_MAIL_JA_CADASTRADO_NA_BASE_DE_DADOS = "E-mail já cadastrado na base de dados!";
-    public static final String NO_SUCH_ELEMENT1 = "No such element!";
+    public static final String E_MAIL_JA_CADASTRADO_NA_BASE_DE_DADOS = "E-mail já cadastrado! Favor revise sua requisição.";
+    public static final String NO_SUCH_ELEMENT1 = "No such element";
 
     @InjectMocks
     private UserServiceImpl userService;
