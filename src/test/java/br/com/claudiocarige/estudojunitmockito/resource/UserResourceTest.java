@@ -20,17 +20,17 @@ import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 @SpringBootTest
 class UserResourceTest {
 
 
-    public static final Integer ID       = 1;
-    public static final String NAME      = "claudio";
-    public static final String EMAIL     = "ccarige@gmail.com";
-    public static final String PASSWORD  = "123";
+    public static final Integer ID = 1;
+    public static final String NAME = "claudio";
+    public static final String EMAIL = "ccarige@gmail.com";
+    public static final String PASSWORD = "123";
     public static final int INDEX = 0;
 
     @InjectMocks
@@ -43,6 +43,7 @@ class UserResourceTest {
 
     private User user;
     private UserRepresentation userRepresentation;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -52,9 +53,9 @@ class UserResourceTest {
     @Test
     void whenFindByIdThenReturnSuccess() {
         when(userService.findById(anyInt())).thenReturn(user);
-        when(mapper.map( any(),  any() )).thenReturn(userRepresentation);
+        when(mapper.map(any(), any())).thenReturn(userRepresentation);
 
-        ResponseEntity<UserRepresentation> response =  userResource.findById(ID);
+        ResponseEntity<UserRepresentation> response = userResource.findById(ID);
 
         assertNotNull(response);
         assertNotNull(response.getBody());
@@ -66,7 +67,7 @@ class UserResourceTest {
         assertEquals(EMAIL, response.getBody().getEmail());
         assertEquals(PASSWORD, response.getBody().getPassword());
 
-   }
+    }
 
     @Test
     void whenFindAllThenReturnAListUserRepresentation() {
@@ -118,10 +119,18 @@ class UserResourceTest {
     }
 
     @Test
-    void delete() {
+    void whenDeleteThenReturnSuccess() {
+        doNothing().when(userService).delete(anyInt());
+
+        ResponseEntity<UserRepresentation> response = userResource.delete(ID);
+
+        assertNotNull(response);
+        assertEquals(ResponseEntity.class, response.getClass());
+        verify(userService, times(1)).delete(anyInt());
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
 
-    public void startModels(){
+    public void startModels() {
         user = new User(ID, NAME, EMAIL, PASSWORD);
         userRepresentation = new UserRepresentation(ID, NAME, EMAIL, PASSWORD);
     }
