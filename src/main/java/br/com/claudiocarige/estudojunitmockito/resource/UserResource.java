@@ -4,7 +4,6 @@ import br.com.claudiocarige.estudojunitmockito.domain.representation.UserReprese
 import br.com.claudiocarige.estudojunitmockito.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -49,8 +48,8 @@ public class UserResource {
     }
 
     @DeleteMapping(value = ID)
-    public ResponseEntity<HttpStatus> delete(@PathVariable Integer id){
+    public ResponseEntity<UserRepresentation> delete(@PathVariable Integer id){
         userService.delete(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.noContent().build();
     }
 }
