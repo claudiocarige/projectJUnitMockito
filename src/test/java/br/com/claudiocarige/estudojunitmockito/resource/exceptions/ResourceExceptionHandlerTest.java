@@ -12,8 +12,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import java.time.LocalDateTime;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 @SpringBootTest
 class ResourceExceptionHandlerTest {
@@ -39,8 +41,10 @@ class ResourceExceptionHandlerTest {
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         assertEquals(ResponseEntity.class, response.getClass());
         assertEquals(StandardError.class, response.getBody().getClass());
-        assertEquals(MESSAGE_NO_SUCH_ELEMENT, response.getBody().getError());
+        assertEquals(MESSAGE_NO_SUCH_ELEMENT, response.getBody().getMessage());
         assertEquals(404, response.getBody().getStatus());
+        assertNotEquals("/users/2", response.getBody().getPath());
+        assertNotEquals(LocalDateTime.now(), response.getBody().getTimestamp());
     }
 
     @Test
@@ -69,7 +73,7 @@ class ResourceExceptionHandlerTest {
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals(ResponseEntity.class, response.getClass());
         assertEquals(StandardError.class, response.getBody().getClass());
-        assertEquals(MESSAGE_DATA_INTEGRITY, response.getBody().getError());
+        assertEquals(MESSAGE_DATA_INTEGRITY, response.getBody().getMessage());
         assertEquals(400, response.getBody().getStatus());
     }
 }
