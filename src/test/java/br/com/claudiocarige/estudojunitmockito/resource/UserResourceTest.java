@@ -2,7 +2,7 @@ package br.com.claudiocarige.estudojunitmockito.resource;
 
 import br.com.claudiocarige.estudojunitmockito.domain.User;
 import br.com.claudiocarige.estudojunitmockito.domain.representation.UserRepresentation;
-import br.com.claudiocarige.estudojunitmockito.service.UserService;
+import br.com.claudiocarige.estudojunitmockito.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -10,6 +10,14 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
+
+import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.when;
+
 
 @SpringBootTest
 class UserResourceTest {
@@ -19,12 +27,12 @@ class UserResourceTest {
     public static final String NAME      = "claudio";
     public static final String EMAIL     = "ccarige@gmail.com";
     public static final String PASSWORD  = "123";
-    public static final String NO_SUCH_ELEMENT = "No such element!";
+
     @InjectMocks
     private UserResource userResource;
 
     @Mock
-    private UserService userService;
+    private UserServiceImpl userService;
     @Mock
     private ModelMapper mapper;
 
@@ -37,8 +45,23 @@ class UserResourceTest {
     }
 
     @Test
-    void findById() {
-    }
+    void whenFindByIdThenReturnSuccess() {
+        when(userService.findById(anyInt())).thenReturn(user);
+        when(mapper.map( any(),  any() )).thenReturn(userRepresentation);
+
+        ResponseEntity<UserRepresentation> response =  userResource.findById(ID);
+
+        assertNotNull(response);
+        assertNotNull(response.getBody());
+        assertEquals(ResponseEntity.class, response.getClass());
+        assertEquals(UserRepresentation.class, response.getBody().getClass());
+
+        assertEquals(ID, response.getBody().getId());
+        assertEquals(NAME, response.getBody().getName());
+        assertEquals(EMAIL, response.getBody().getEmail());
+        assertEquals(PASSWORD, response.getBody().getPassword());
+
+   }
 
     @Test
     void findAll() {
@@ -59,6 +82,5 @@ class UserResourceTest {
     public void startModels(){
         user = new User(ID, NAME, EMAIL, PASSWORD);
         userRepresentation = new UserRepresentation(ID, NAME, EMAIL, PASSWORD);
-
     }
 }
