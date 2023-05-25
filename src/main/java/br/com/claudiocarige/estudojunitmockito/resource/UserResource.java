@@ -2,8 +2,8 @@ package br.com.claudiocarige.estudojunitmockito.resource;
 
 import br.com.claudiocarige.estudojunitmockito.domain.representation.UserRepresentation;
 import br.com.claudiocarige.estudojunitmockito.service.UserService;
-import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,12 +15,13 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/users")
-@RequiredArgsConstructor
 public class UserResource {
 
     public static final String ID = "/{id}";
-    private final UserService userService;
-    private final ModelMapper mapper;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private ModelMapper mapper;
 
     @GetMapping(value = ID)
     public ResponseEntity<UserRepresentation> findById(@PathVariable Integer id){
