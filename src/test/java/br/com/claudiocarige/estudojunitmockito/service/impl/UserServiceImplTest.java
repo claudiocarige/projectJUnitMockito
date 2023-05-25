@@ -3,7 +3,7 @@ package br.com.claudiocarige.estudojunitmockito.service.impl;
 import br.com.claudiocarige.estudojunitmockito.domain.User;
 import br.com.claudiocarige.estudojunitmockito.domain.representation.UserRepresentation;
 import br.com.claudiocarige.estudojunitmockito.repository.UserRepository;
-import br.com.claudiocarige.estudojunitmockito.service.exception.DataIntegratyViolationException;
+import br.com.claudiocarige.estudojunitmockito.service.exception.DataIntegrityViolationException;
 import br.com.claudiocarige.estudojunitmockito.service.exception.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -112,7 +112,7 @@ class UserServiceImplTest {
             optionalUser.get().setId(2);
             userService.insert(userRepresentation);
         }catch (Exception ex){
-            assertEquals(DataIntegratyViolationException.class, ex.getClass());
+            assertEquals(DataIntegrityViolationException.class, ex.getClass());
             assertEquals(E_MAIL_JA_CADASTRADO_NA_BASE_DE_DADOS, ex.getMessage());
         }
     }
@@ -142,7 +142,7 @@ class UserServiceImplTest {
             optionalUser.get().setId(2);
             userService.update(userRepresentation);
         }catch (Exception ex){
-            assertEquals(DataIntegratyViolationException.class, ex.getClass());
+            assertEquals(DataIntegrityViolationException.class, ex.getClass());
             assertEquals(E_MAIL_JA_CADASTRADO_NA_BASE_DE_DADOS, ex.getMessage());
         }
     }

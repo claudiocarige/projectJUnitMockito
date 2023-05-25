@@ -5,7 +5,7 @@ import br.com.claudiocarige.estudojunitmockito.domain.User;
 import br.com.claudiocarige.estudojunitmockito.domain.representation.UserRepresentation;
 import br.com.claudiocarige.estudojunitmockito.repository.UserRepository;
 import br.com.claudiocarige.estudojunitmockito.service.UserService;
-import br.com.claudiocarige.estudojunitmockito.service.exception.DataIntegratyViolationException;
+import br.com.claudiocarige.estudojunitmockito.service.exception.DataIntegrityViolationException;
 import br.com.claudiocarige.estudojunitmockito.service.exception.NoSuchElementException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
     private void findByEmail(UserRepresentation userRepresentation) {
         Optional<User> user = userRepository.findByEmail(userRepresentation.getEmail());
         if (user.isPresent() && !user.get().getId().equals(userRepresentation.getId())) {
-            throw new DataIntegratyViolationException("E-mail já cadastrado na base de dados!");
+            throw new DataIntegrityViolationException("E-mail já cadastrado na base de dados!");
         }
     }
 

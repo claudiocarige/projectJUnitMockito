@@ -1,6 +1,6 @@
 package br.com.claudiocarige.estudojunitmockito.resource.exceptions;
 
-import br.com.claudiocarige.estudojunitmockito.service.exception.DataIntegratyViolationException;
+import br.com.claudiocarige.estudojunitmockito.service.exception.DataIntegrityViolationException;
 import br.com.claudiocarige.estudojunitmockito.service.exception.NoSuchElementException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,8 +32,8 @@ public class ResourceExceptionHandler {
                 request.getRequestURI());
         return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(erro);
     }
-    @ExceptionHandler(DataIntegratyViolationException.class)
-    public ResponseEntity<StandardError> dataIntegratyViolationException(DataIntegratyViolationException ex, HttpServletRequest request ){
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<StandardError> dataIntegrityViolationException(DataIntegrityViolationException ex, HttpServletRequest request ){
         StandardError erro = new StandardError(LocalDateTime.now(),
                 HttpStatus.BAD_REQUEST.value(),
                 ex.getMessage(),
